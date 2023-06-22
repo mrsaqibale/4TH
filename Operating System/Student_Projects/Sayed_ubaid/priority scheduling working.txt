@@ -1,0 +1,31 @@
+1. The code starts by defining a `Process` struct, which represents a single process and contains attributes like process ID, burst time, and priority.
+
+2. The `comparePriority` function is a custom comparison function used for sorting the processes based on their priority. It returns `true` if the priority of the first process is lower than the second process, and `false` otherwise.
+
+3. The `schedulePriority` function takes a vector of `Process` objects as input and performs the priority scheduling algorithm.
+
+4. Inside the `schedulePriority` function, the processes are sorted based on their priority using `std::sort` and the `comparePriority` function.
+
+5. The function then initializes vectors (`waitingTime`, `turnaroundTime`, `completionTime`) to store the waiting time, turnaround time, and completion time for each process.
+
+6. The waiting time of the first process is set to 0.
+
+7. The function calculates the waiting time and completion time for each process by iterating over the sorted processes. The waiting time of a process is the sum of the burst times of the preceding processes, and the completion time is the sum of the waiting time and the burst time of the current process.
+
+8. After calculating the waiting time and completion time, the function calculates the turnaround time for each process by subtracting the waiting time from the completion time.
+
+9. The function then calculates the average waiting time and average turnaround time by summing up the waiting time and turnaround time of all the processes and dividing by the total number of processes.
+
+10. Finally, the function prints the process schedule and the computed results, including the process ID, burst time, priority, waiting time, and turnaround time.
+
+11. In the `main` function, the user is prompted to enter the number of processes.
+
+12. A vector of `Process` objects is created with the appropriate size to store the process details.
+
+13. The user is then prompted to enter the details (process ID, burst time, and priority) for each process, and the values are stored in the corresponding objects within the vector.
+
+14. The `schedulePriority` function is called with the vector of processes as an argument to perform the priority scheduling.
+
+15. The results, including the process schedule and the average waiting time/turnaround time, are displayed.
+
+Overall, the code sorts the processes based on their priority and calculates the waiting time, turnaround time, and average statistics using the priority scheduling algorithm.

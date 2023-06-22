@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct Process
+{
+    int processId;
+    int burstTime;
+    int priority;
+};
+
+bool comparePriority(const Process& p1, const Process& p2)
+{
+    return p1.priority < p2.priority;
+}
+
+void schedulePriority(std::vector<Process>& processes)
+{
+    // Sort the processes based on priority (lowest priority first)
+    std::sort(processes.begin(), processes.end(), comparePriority);
+
+    int n = processes.size();
+    std::vector<int> waitingTime(n), turnaroundTime(n), completionTime(n);
+
+    waitingTime[0] = 0; // The first process starts with waiting time 0
+
+    // Calculate waiting time and completion time for each process
+    completionTime[0] = processes[0].burstTime; // Completion time for the first process
+    for (int i = 1; i < n; i++)
+    {
+        waitingTime[i] = processes[i - 1].burstTime + waitingTime[i - 1];
+        completionTime[i] = waitingTime[i] + processes[i].burstTime;
+    }
+
+    // Calculate turnaround time for each process
+    for (int i = 0; i < n; i++)
+    {
+        turnaroundTime[i] = completionTime[i] - waitingTime[i];
+    }
+
+    // Calculate average waiting time and average turnaround time
+    double avgWaitingTime = 0, avgTurnaroundTime = 0;
+    for (int i = 0; i < n; i++)
+    {
+        avgWaitingTime += waitingTime[i];
+        avgTurnaroundTime += turnaroundTime[i];
+    }
+    avgWaitingTime /= n;
+    avgTurnaroundTime /= n;
+
+    // Print the schedule and results
+    std::cout << "Process\tBurst Time\tPriority\tWaiting Time\tTurnaround Time\n";
+    for (int i = 0; i < n; i++)
+    {
+        std::cout << processes[i].processId << "\t\t" << processes[i].burstTime << "\t\t" << processes[i].priority
+            << "\t\t" << waitingTime[i] << "\t\t" << turnaroundTime[i] << "\n";
+    }
+    std::cout << "\nAverage Waiting Time: " << avgWaitingTime << "\n";
+    std::cout << "Average Turnaround Time: " << avgTurnaroundTime << "\n";
+
+    // Print the Gantt chart
+    std::cout << "\nGantt Chart:\n";
+    for (int i = 0; i < n; i++)
+    {
+        std::cout << "+";
+        for (int j = 0; j < processes[i].burstTime; j++)
+            std::cout << "-";
+    }
+    std::cout << "+\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        std::cout << "|";
+        for (int j = 0; j < processes[i].burstTime - 1; j++)
+            std::cout << " ";
+        std::cout << "P" << processes[i].processId;
+    }
+    std::cout << "|\n";
+
+    std::cout << "+";
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < processes[i].burstTime; j++)
+            std::cout << "-";
+        std::cout << "+";
+    }
+    std::cout << "\n";
+
+    // Print the process values on the Gantt chart
+    std::cout << "0";
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < processes[i].burstTime - 1; j++)
+            std::cout << " ";
+        std::cout << completionTime[i];
+    }
+    std::cout << completionTime[n - 1] + processes[n - 1].burstTime << "\n";
+}
+
+int main()
+{
+    int numProcesses;
+    std::cout << "Enter the number of processes: ";
+    std::cin >> numProcesses;
+
+    std::vector<Process> processes(numProcesses);
+
+    for (int i = 0; i < numProcesses; i++)
+    {
+        std::cout << "Enter details for process " << i + 1 << ":\n";
+        std::cout << "Process ID: ";
+        std::cin >> processes[i].processId;
+        std::cout << "Burst Time: ";
+        std::cin >> processes[i].burstTime;
+        std::cout << "Priority: ";
+        std::cin >> processes[i].priority;
+        std::cout << "\n";
+    }
+
+    schedulePriority(processes);
+
+    return 0;
+}
